@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -24,11 +26,11 @@ class UserTest extends TestCase
             ]);
     }
 
-    public function test_create_user(): int
+    public function test_create_user(): array
     {
         $response = $this->post('/api/user', [
             'name' => 'test user',
-            'email' => 'test15@mail.com',
+            'email' => 'test22@mail.com',
             'password' => 'test password',
         ]);
 
@@ -45,35 +47,62 @@ class UserTest extends TestCase
                 ]
             ]);
 
-        return $response['data']['id'];
+        return $response['data'];
+    }
+
+    public function test_create_user_with_existing_email()
+    {
+        $response = $this->post('/api/user', [
+            'name' => 'test user',
+            'email' => 'test21@mail.com',
+            'password' => 'test password',
+        ]);
+
+        $response
+            ->assertInvalid();
     }
 
     /**
      * @depends test_create_user
      */
-    public function test_get_user_by_id(int $id): void
+    public function test_get_user_by_id(array $user): void
     {
-        self::assertNotNull($id);
+        self::assertNotNull($user);
+        $id = $user['id'];
 
         $response = $this->get("/api/user/$id");
 
         $response
             ->assertStatus(200)
-            ->assertJsonStructure([
+            ->assertExactJson([
                 'data' => [
-                    'id',
-                    'name',
-                    'email',
-                    'created_at'
+                    'id' => $id,
+                    'name' => $user['name'],
+                    'email' => $user['email'],
+                    'created_at' => Carbon::make($user['created_at'])->format('Y-m-d'),
                 ]
+            ]);
+    }
+    public function test_user_not_found_by_id()
+    {
+        $response = $this->get('/api/user/0');
+
+        $response
+            ->assertStatus(404)
+            ->assertExactJson([
+                'message' => 'Record not found.'
             ]);
     }
 
     /**
      * @depends test_create_user
      */
-    public function test_update_user(int $id): void
+    public function test_update_user(array $user): void
     {
+        self::assertNotNull($user);
+
+        $id = $user['id'];
+
         $response = $this->put("/api/user/$id", [
             'name' => 'test updated user',
         ]);
@@ -81,12 +110,12 @@ class UserTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertJsonStructure([
+            ->assertExactJson([
                 'data' => [
-                    'id',
-                    'name',
-                    'email',
-                    'created_at',
+                    'id' => $id,
+                    'name' => 'test updated user',
+                    'email' => $user['email'],
+                    'created_at' => Carbon::make($user['created_at'])->format('Y-m-d'),
                 ]
             ]);
     }
@@ -94,12 +123,18 @@ class UserTest extends TestCase
     /**
      * @depends test_create_user
      */
-    public function test_delete_user(int $id): void
+    public function test_delete_user(array $user): void
     {
+        $user = User::findOrFail($user['id']);
+
+        self::assertNotNull($user);
+        $id = $user['id'];
+
+        $this->actingAs($user);
         $response = $this->delete("/api/user/$id");
 
         $response
             ->assertNoContent();
-    }
+}
 
 }

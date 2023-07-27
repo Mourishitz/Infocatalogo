@@ -7,6 +7,8 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
@@ -17,7 +19,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return UserResource::collection($this->repository->all());
     }
@@ -54,14 +56,17 @@ class UserController extends Controller
         $user = $this->repository->findOrFail($id);
         $user->update(['name' => $data['name']]);
 
-        return ['data' => $user];
+        return ['data' => new UserResource($user)];
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        if($request->user()->id !== $id){
+            return new Response(['message' => 'This is not your user, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
         $user = $this->repository->findOrFail($id);
         $user->delete();
         return response()->json(null, 204);
