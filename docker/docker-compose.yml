@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+
+  db:
+    container_name: infocatalogo_db
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./env/db.env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - infonetwork
+
+networks:
+  infonetwork:
+    driver: bridge
+
+volumes:
+  db_data: {}
