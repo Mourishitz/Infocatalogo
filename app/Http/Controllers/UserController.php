@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function __construct(
         protected User $repository
     ) {}
@@ -19,7 +23,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         return UserResource::collection($this->repository->all());
     }

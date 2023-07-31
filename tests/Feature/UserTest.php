@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-
     public function test_get_all_users(): void
     {
         $response = $this->get('/api/user');
@@ -30,7 +30,7 @@ class UserTest extends TestCase
     {
         $response = $this->post('/api/user', [
             'name' => 'test user',
-            'email' => 'test22@mail.com',
+            'email' => 'test@mail.com',
             'password' => 'test password',
         ]);
 
@@ -54,7 +54,7 @@ class UserTest extends TestCase
     {
         $response = $this->post('/api/user', [
             'name' => 'test user',
-            'email' => 'test21@mail.com',
+            'email' => 'test@mail.com',
             'password' => 'test password',
         ]);
 
@@ -123,6 +123,20 @@ class UserTest extends TestCase
     /**
      * @depends test_create_user
      */
+    public function test_delete_user_with_wrong_id(array $user): void
+    {
+        $user = User::findOrFail($user['id']);
+        $this->actingAs($user);
+        $response = $this->delete('/api/user/0');
+
+        $response
+            ->assertStatus(401)
+            ->assertJson(['message' => 'This is not your user, go away']);
+    }
+
+    /**
+     * @depends test_create_user
+     */
     public function test_delete_user(array $user): void
     {
         $user = User::findOrFail($user['id']);
@@ -135,6 +149,6 @@ class UserTest extends TestCase
 
         $response
             ->assertNoContent();
-}
+    }
 
 }
