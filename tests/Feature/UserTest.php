@@ -4,11 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\CreatesApplication;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
+
+    use CreatesApplication;
+
     public function test_get_all_users(): void
     {
         $response = $this->get('/api/user');

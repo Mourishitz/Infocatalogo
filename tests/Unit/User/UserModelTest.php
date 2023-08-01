@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\User;
 
+use App\Models\Post;
 use App\Models\User;
-use Tests\TestCase;
 use Tests\CreatesApplication;
+use Tests\TestCase;
 
 
 class UserModelTest extends TestCase
@@ -18,7 +19,24 @@ class UserModelTest extends TestCase
 
         $this->assertDatabaseHas('users', $user->getAttributes());
         $this->assertInstanceOf(User::class, $user);
+
         return $user;
+    }
+
+    /**
+     * @depends test_user_can_be_instantiated
+     */
+    public function test_user_can_have_posts(User $user): void
+    {
+        Post::factory(5)->for($user, 'author')->create();
+
+        $posts = $user->posts;
+        $this->assertNotNull($posts);
+
+        foreach ($posts as $post){
+            $this->assertDatabaseHas('posts', $post->getAttributes());
+        }
+        $this->assertInstanceOf(User::class, $user);
     }
 
     /**
