@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Post;
 
+use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePostRequest extends FormRequest
@@ -11,7 +12,8 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $post = Post::find($this->route('post'));
+        return $post && $this->user()->can('update', $post);
     }
 
     /**
@@ -22,7 +24,8 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => [],
+            'type' => [],
         ];
     }
 }

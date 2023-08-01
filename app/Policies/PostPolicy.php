@@ -10,24 +10,27 @@ class PostPolicy
 {
     /**
      * Determine whether the user can view any models.
+     * @codeCoverageIgnore
      */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
 
     /**
      * Determine whether the user can view the model.
+     * @codeCoverageIgnore
      */
-    public function view(User $user, Post $post): bool
+    public function view(): bool
     {
         return true;
     }
 
     /**
      * Determine whether the user can create models.
+     * @codeCoverageIgnore
      */
-    public function create(User $user): bool
+    public function create(): bool
     {
         return true;
     }
@@ -37,7 +40,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->id === $post->id;
+        return $user->id === $post->author->id;
     }
 
     /**
@@ -45,7 +48,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->id;
+        return $user->id === $post->author->id;
     }
 
     /**
@@ -53,7 +56,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post): bool
     {
-        return $user->id === $post->id;
+        return $user->id === $post->author->id;
     }
 
     /**
@@ -61,6 +64,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post): bool
     {
-        return $user->id === $post->id;
+        return $user->id === $post->author->id;
     }
 }

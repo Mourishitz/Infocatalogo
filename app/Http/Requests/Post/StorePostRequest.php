@@ -11,7 +11,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return (bool)$this->user();
     }
 
     /**
@@ -22,7 +22,8 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required'],
+            'type' => ['required']
         ];
     }
 }

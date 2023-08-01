@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Policies\PostPolicy;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest

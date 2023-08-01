@@ -4,24 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class PostController extends Controller
 {
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __construct(
+        protected Post $repository
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return PostResource::collection($this->repository->all());
     }
 
     /**
@@ -29,38 +33,42 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        return new Response(['data' => new PostResource($request->user()->posts()->create($data))], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(int $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
+        $post = $this->repository->findOrFail($id);
+        return new PostResource($post);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, int $id)
     {
-        //
+        $data = $request->validated();
+        $post = Post::find($id);
+        $post->update($data);
+        return ['data' => new PostResource($post)];
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Request $request, int $id)
     {
-        //
+        $post = $this->repository->findOrFail($id);
+        if($request->user()->cannot('delete', $post)){
+            return new Response(['message' => 'This is not your post, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
+
+        $post->delete();
+        return response()->json(null, 204);
     }
 }
