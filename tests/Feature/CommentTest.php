@@ -31,11 +31,14 @@ class CommentTest extends TestCase
 
     public function test_create_comment(): array
     {
-        $this->actingAs(User::factory()->create());
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $user->posts()->create(Post::factory()->make()->getAttributes());
 
         $response = $this->post('/api/comment', [
             'content' => 'test comment',
-            'post' => Post::factory()->create()->getAttribute('id'),
+            'post' => $user->posts()->first()->getAttribute('id'),
         ]);
 
 
@@ -132,7 +135,7 @@ class CommentTest extends TestCase
      */
     public function test_delete_comment(array $comment): void
     {
-        $user = User::find($comment['author']);
+        $user = User::find($comment['owner']);
         $this->actingAs($user);
 
         $id = $comment['id'];
