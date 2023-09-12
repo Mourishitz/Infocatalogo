@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Comment extends Model
 {
@@ -31,10 +30,10 @@ class Comment extends Model
     }
 
     /**
-     * Get commentable entity.
+     * Get comment post.
      */
-    public function commentable(): MorphTo
+    public function post(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Post::class);
     }
 }
