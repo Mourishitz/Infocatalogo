@@ -24,8 +24,8 @@ class CommentTest extends TestCase
                         'content',
                         'owner',
                         'post',
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
@@ -41,7 +41,6 @@ class CommentTest extends TestCase
             'post' => $user->posts()->first()->getAttribute('id'),
         ]);
 
-
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
@@ -50,7 +49,7 @@ class CommentTest extends TestCase
                     'content',
                     'owner',
                     'post',
-                ]
+                ],
             ]);
 
         return $response['data'];
@@ -67,12 +66,12 @@ class CommentTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
-               'data' => [
-                   'id',
-                   'content',
-                   'owner',
-                   'post'
-               ]
+                'data' => [
+                    'id',
+                    'content',
+                    'owner',
+                    'post',
+                ],
             ]);
     }
 
@@ -99,7 +98,6 @@ class CommentTest extends TestCase
             'content' => 'test updated comment',
         ]);
 
-
         $response
             ->assertStatus(200)
             ->assertExactJson([
@@ -108,7 +106,7 @@ class CommentTest extends TestCase
                     'content' => 'test updated comment',
                     'post' => $comment['post'],
                     'owner' => $user->id,
-                ]
+                ],
             ]);
     }
 

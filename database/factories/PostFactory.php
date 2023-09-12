@@ -22,7 +22,7 @@ class PostFactory extends Factory
 
         return [
             'title' => $this->faker->name,
-            'type' => PostTypeEnum::getByIndex($index)
+            'type' => PostTypeEnum::getByIndex($index),
         ];
     }
 }

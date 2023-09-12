@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Comment;
 
-use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCommentRequest extends FormRequest
@@ -12,7 +11,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-       return (bool)$this->user();
+        return (bool) $this->user();
     }
 
     /**
@@ -24,7 +23,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string'],
-            'post' => ['required', 'exists:posts,id']
+            'post' => ['required', 'exists:posts,id'],
         ];
     }
 }

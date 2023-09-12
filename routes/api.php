@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/user', UserController::class)->except(['destroy']);
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
 
-
 // Posts
 
 Route::apiResource('/post', PostController::class)
@@ -29,7 +28,6 @@ Route::apiResource('/post', PostController::class)
     ->except(['index', 'show']);
 Route::get('/post', [PostController::class, 'index']);
 Route::get('/post/{id}', [PostController::class, 'show']);
-
 
 // Comments
 

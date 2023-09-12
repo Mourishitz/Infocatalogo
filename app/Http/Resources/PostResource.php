@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +18,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'type' => $this->type,
-            'author' => $this->author->id
+            'author' => $this->author->id,
         ];
     }
 }

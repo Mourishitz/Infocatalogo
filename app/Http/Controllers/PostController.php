@@ -6,19 +6,19 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class PostController extends Controller
 {
-
     /**
      * @codeCoverageIgnore
      */
     public function __construct(
         protected Post $repository
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -44,6 +44,7 @@ class PostController extends Controller
     public function show(int $id)
     {
         $post = $this->repository->findOrFail($id);
+
         return new PostResource($post);
     }
 
@@ -55,6 +56,7 @@ class PostController extends Controller
         $data = $request->validated();
         $post = Post::find($id);
         $post->update($data);
+
         return ['data' => new PostResource($post)];
     }
 
@@ -64,11 +66,12 @@ class PostController extends Controller
     public function destroy(Request $request, int $id)
     {
         $post = $this->repository->findOrFail($id);
-        if($request->user()->cannot('delete', $post)){
+        if ($request->user()->cannot('delete', $post)) {
             return new Response(['message' => 'This is not your post, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         $post->delete();
+
         return response()->json(null, 204);
     }
 }

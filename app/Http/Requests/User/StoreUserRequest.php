@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\User;
 
-use App\Policies\PostPolicy;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -25,7 +24,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['email', 'required', 'unique:users', 'max:255'],
-            'password' => ['required', 'min:6']
+            'password' => ['required', 'min:6'],
         ];
     }
 }

@@ -21,7 +21,7 @@ class Post extends Model
 
     protected $fillable = [
         'title',
-        'type'
+        'type',
     ];
 
     protected $casts = [

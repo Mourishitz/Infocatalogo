@@ -16,6 +16,7 @@ enum PostTypeEnum: string
         if (array_key_exists($index, $cases)) {
             return $cases[$index];
         }
+
         return null;
     }
 }

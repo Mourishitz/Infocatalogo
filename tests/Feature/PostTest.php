@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Tests\CreatesApplication;
 use Tests\TestCase;
 
@@ -24,8 +23,8 @@ class PostTest extends TestCase
                         'title',
                         'type',
                         'author',
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
@@ -38,7 +37,6 @@ class PostTest extends TestCase
             'type' => 'Post',
         ]);
 
-
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
@@ -47,7 +45,7 @@ class PostTest extends TestCase
                     'title',
                     'type',
                     'author',
-                ]
+                ],
             ]);
 
         return $response['data'];
@@ -64,12 +62,12 @@ class PostTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
-               'data' => [
-                   'id',
-                   'title',
-                   'type',
-                   'author'
-               ]
+                'data' => [
+                    'id',
+                    'title',
+                    'type',
+                    'author',
+                ],
             ]);
     }
 
@@ -96,7 +94,6 @@ class PostTest extends TestCase
             'title' => 'test updated post',
         ]);
 
-
         $response
             ->assertStatus(200)
             ->assertExactJson([
@@ -105,7 +102,7 @@ class PostTest extends TestCase
                     'title' => 'test updated post',
                     'type' => $post['type'],
                     'author' => $user->id,
-                ]
+                ],
             ]);
     }
 

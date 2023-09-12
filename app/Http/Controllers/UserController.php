@@ -6,19 +6,19 @@ use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
-
     /**
      * @codeCoverageIgnore
      */
     public function __construct(
         protected User $repository
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -38,6 +38,7 @@ class UserController extends Controller
 
         $user = $this->repository->create($data);
         $user['token'] = $user->createToken('token')->plainTextToken;
+
         return new Response(['data' => $user], 201);
     }
 
@@ -47,6 +48,7 @@ class UserController extends Controller
     public function show(int $id)
     {
         $user = $this->repository->findOrFail($id);
+
         return new UserResource($user);
     }
 
@@ -68,11 +70,12 @@ class UserController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
-        if($request->user()->id !== $id){
+        if ($request->user()->id !== $id) {
             return new Response(['message' => 'This is not your user, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
         }
         $user = $this->repository->findOrFail($id);
         $user->delete();
+
         return response()->json(null, 204);
     }
 }

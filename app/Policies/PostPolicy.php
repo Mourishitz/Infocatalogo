@@ -4,12 +4,12 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
     /**
      * Determine whether the user can view any models.
+     *
      * @codeCoverageIgnore
      */
     public function viewAny(): bool
@@ -19,6 +19,7 @@ class PostPolicy
 
     /**
      * Determine whether the user can view the model.
+     *
      * @codeCoverageIgnore
      */
     public function view(): bool
@@ -28,6 +29,7 @@ class PostPolicy
 
     /**
      * Determine whether the user can create models.
+     *
      * @codeCoverageIgnore
      */
     public function create(): bool

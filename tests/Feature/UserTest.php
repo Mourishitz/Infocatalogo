@@ -9,7 +9,6 @@ use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-
     use CreatesApplication;
 
     public function test_get_all_users(): void
@@ -23,9 +22,9 @@ class UserTest extends TestCase
                     '*' => [
                         'name',
                         'email',
-//                        'posts',
-                    ]
-                ]
+                        //                        'posts',
+                    ],
+                ],
             ]);
     }
 
@@ -37,7 +36,6 @@ class UserTest extends TestCase
             'password' => 'test password',
         ]);
 
-
         $response
             ->assertStatus(201)
             ->assertJsonStructure([
@@ -47,7 +45,7 @@ class UserTest extends TestCase
                     'email',
                     'token',
                     'created_at',
-                ]
+                ],
             ]);
 
         return $response['data'];
@@ -83,9 +81,10 @@ class UserTest extends TestCase
                     'name' => $user['name'],
                     'email' => $user['email'],
                     'created_at' => Carbon::make($user['created_at'])->format('Y-m-d'),
-                ]
+                ],
             ]);
     }
+
     public function test_user_not_found_by_id()
     {
         $response = $this->get('/api/user/0');
@@ -93,7 +92,7 @@ class UserTest extends TestCase
         $response
             ->assertStatus(404)
             ->assertExactJson([
-                'message' => 'Record not found.'
+                'message' => 'Record not found.',
             ]);
     }
 
@@ -110,7 +109,6 @@ class UserTest extends TestCase
             'name' => 'test updated user',
         ]);
 
-
         $response
             ->assertStatus(200)
             ->assertExactJson([
@@ -119,7 +117,7 @@ class UserTest extends TestCase
                     'name' => 'test updated user',
                     'email' => $user['email'],
                     'created_at' => Carbon::make($user['created_at'])->format('Y-m-d'),
-                ]
+                ],
             ]);
     }
 
@@ -153,5 +151,4 @@ class UserTest extends TestCase
         $response
             ->assertNoContent();
     }
-
 }

@@ -7,8 +7,8 @@ use App\Http\Requests\Comment\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class CommentController extends Controller
@@ -18,7 +18,8 @@ class CommentController extends Controller
      */
     public function __construct(
         protected Comment $repository
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -54,6 +55,7 @@ class CommentController extends Controller
     public function show(int $id)
     {
         $comment = $this->repository->findOrFail($id);
+
         return new CommentResource($comment);
     }
 
@@ -65,6 +67,7 @@ class CommentController extends Controller
         $data = $request->validated();
         $comment = Comment::find($id);
         $comment->update($data);
+
         return ['data' => new CommentResource($comment)];
     }
 
@@ -74,11 +77,12 @@ class CommentController extends Controller
     public function destroy(Request $request, int $id)
     {
         $comment = $this->repository->findOrFail($id);
-        if($request->user()->cannot('delete', $comment)){
+        if ($request->user()->cannot('delete', $comment)) {
             return new Response(['message' => 'This is not your comment, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
         }
 
         $comment->delete();
+
         return response()->json(null, 204);
     }
 }

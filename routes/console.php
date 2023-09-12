@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Console\Command;
 
 /*
 |--------------------------------------------------------------------------

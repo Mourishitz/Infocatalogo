@@ -13,6 +13,7 @@ class UpdateCommentRequest extends FormRequest
     public function authorize(): bool
     {
         $comment = Comment::find($this->route('comment'));
+
         return $comment && $this->user()->can('update', $comment);
     }
 

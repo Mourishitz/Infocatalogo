@@ -7,7 +7,6 @@ use App\Models\User;
 use Tests\CreatesApplication;
 use Tests\TestCase;
 
-
 class UserModelTest extends TestCase
 {
     use CreatesApplication;
@@ -33,7 +32,7 @@ class UserModelTest extends TestCase
         $posts = $user->posts;
         $this->assertNotNull($posts);
 
-        foreach ($posts as $post){
+        foreach ($posts as $post) {
             $this->assertDatabaseHas('posts', $post->getAttributes());
         }
         $this->assertInstanceOf(User::class, $user);
@@ -51,6 +50,7 @@ class UserModelTest extends TestCase
 
         $this->assertDatabaseHas('users', $user->getAttributes());
         $this->assertDatabaseMissing('users', $old_attributes);
+
         return $user;
     }
 
