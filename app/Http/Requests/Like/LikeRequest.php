@@ -4,14 +4,14 @@ namespace App\Http\Requests\Like;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreLikeRequest extends FormRequest
+class LikeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return (bool)$this->user();
     }
 
     /**
