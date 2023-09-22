@@ -23,7 +23,6 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string'],
-            'post' => ['required', 'exists:posts,id'],
         ];
     }
 }

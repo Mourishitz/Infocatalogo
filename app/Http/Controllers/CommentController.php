@@ -29,6 +29,14 @@ class CommentController extends Controller
         return CommentResource::collection($this->repository->all());
     }
 
+    public function postComments(int $id)
+    {
+        /**@var Post $post**/
+        $post = Post::find($id);
+
+        return CommentResource::collection($post->comments()->get());
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -37,12 +45,12 @@ class CommentController extends Controller
         $data = $request->validated();
 
         $user = $request->user();
-        $post = Post::find($request->post);
+        $post = Post::find($request->id);
 
-        $comment = new Comment($data);
+        $comment = $post->comments()->make($data);
 
         $comment->owner()->associate($user);
-        $comment->post()->associate($post);
+        $comment->commentable()->associate($post);
 
         $comment->save();
 
