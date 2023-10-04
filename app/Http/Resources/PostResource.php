@@ -15,20 +15,7 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $user = $request->user();
-
-        if(!$user){
-            $token = $request->header('Authorization');
-
-            if (!$token && $request->has('token')) {
-                $token = $request->input('token');
-            }
-            if ($token) {
-                $user = Auth::guard('sanctum')->user();
-            }
-        }
-
-        $isLiked = (bool)sizeof($this->likes()->where('owner_id', '=', $user->id ?? 0)->get());
+        $isLiked = (bool)sizeof($this->likes()->where('owner_id', '=', Auth::guard('sanctum')->id() ?? 0)->get());
 
         return [
             'id' => $this->id,
@@ -41,7 +28,7 @@ class PostResource extends JsonResource
             ],
             'liked' => $isLiked,
             'likes' => $this->likes->count(),
-            'comments' => $this->comments->count(),
+            'comments' => CommentResource::collection($this->comments),
         ];
     }
 }

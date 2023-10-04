@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -32,6 +33,12 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => 'Record not found.',
             ], 404);
+        });
+
+        $this->renderable(function (AccessDeniedHttpException $e){
+           return response()->json([
+                'message' => 'Unauthorized.',
+            ], 401);
         });
     }
 }

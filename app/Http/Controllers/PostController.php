@@ -54,9 +54,13 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, int $id)
     {
         $data = $request->validated();
-        $post = Post::find($id);
-        $post->update($data);
+        $post = $this->repository->findOrFail($id);
 
+        if ($request->user()->cannot('update', $post)) {
+            return new Response(['message' => 'This is not your post, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
+
+        $post->update($data);
         return ['data' => new PostResource($post)];
     }
 
@@ -66,6 +70,7 @@ class PostController extends Controller
     public function destroy(Request $request, int $id)
     {
         $post = $this->repository->findOrFail($id);
+
         if ($request->user()->cannot('delete', $post)) {
             return new Response(['message' => 'This is not your post, go away'], ResponseAlias::HTTP_UNAUTHORIZED);
         }
