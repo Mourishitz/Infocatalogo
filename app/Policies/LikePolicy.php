@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
 use App\Models\Like;
 use App\Models\User;
 

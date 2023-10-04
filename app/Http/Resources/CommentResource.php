@@ -19,7 +19,7 @@ class CommentResource extends JsonResource
             'content' => $this->content,
             'owner' => $this->owner->id,
             'likes' => $this->likes->count(),
-            'commentable' => $this->commentable
+            'commentable' => $this->commentable,
         ];
     }
 }

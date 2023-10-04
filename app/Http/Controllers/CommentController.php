@@ -31,7 +31,7 @@ class CommentController extends Controller
 
     public function postComments(int $id)
     {
-        /**@var Post $post**/
+        /** @var Post $post* */
         $post = Post::find($id);
 
         return CommentResource::collection($post->comments()->get());

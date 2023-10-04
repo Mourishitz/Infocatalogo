@@ -27,6 +27,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => [],
             'type' => [],
+            'content' => [],
         ];
     }
 }

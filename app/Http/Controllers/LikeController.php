@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests\Like\LikeRequest;
 use App\Http\Resources\LikeResource;
 use App\Models\Comment;
@@ -13,19 +12,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class LikeController extends Controller
 {
-
     public function likePost(LikeRequest $request): Response
     {
-        /**@var User $user **/
+        /** @var User $user * */
         $user = $request->user();
 
-        /**@var Post $post **/
+        /** @var Post $post * */
         $post = Post::find($request->id);
 
         try {
@@ -42,16 +39,18 @@ class LikeController extends Controller
     public function getPostLikes(int $id): Response
     {
         $post = Post::find($id);
+
         return new Response(['data' => LikeResource::collection($post->likes)], ResponseAlias::HTTP_OK);
     }
 
-    public function dislikePost(Request $request, int $id): JsonResponse | Response
+    public function dislikePost(Request $request, int $id): JsonResponse|Response
     {
-        /**@var Post $post **/
+        /** @var Post $post * */
         $post = Post::find($id);
 
-        try{
+        try {
             $this->dislike($request->user(), $post);
+
             return response()->json(null, 204);
         } catch (InvalidArgumentException $e) {
             return new Response(['message' => $e->getMessage()], ResponseAlias::HTTP_BAD_REQUEST);
@@ -60,10 +59,10 @@ class LikeController extends Controller
 
     public function likeComment(LikeRequest $request): Response
     {
-        /**@var User $user **/
+        /** @var User $user * */
         $user = $request->user();
 
-        /**@var Comment $comment **/
+        /** @var Comment $comment * */
         $comment = Comment::find($request->id);
 
         try {
@@ -80,17 +79,19 @@ class LikeController extends Controller
     public function getCommentLikes(int $id): Response
     {
         $comment = Comment::find($id);
+
         return new Response(['data' => LikeResource::collection($comment->likes)], ResponseAlias::HTTP_OK);
     }
 
-    public function dislikeComment(Request $request, int $id): JsonResponse | Response
+    public function dislikeComment(Request $request, int $id): JsonResponse|Response
     {
 
-        /**@var Comment $comment **/
+        /** @var Comment $comment * */
         $comment = Comment::find($id);
 
-        try{
+        try {
             $this->dislike($request->user(), $comment);
+
             return response()->json(null, 204);
         } catch (InvalidArgumentException $e) {
             return new Response(['message' => $e->getMessage()], ResponseAlias::HTTP_BAD_REQUEST);
@@ -100,21 +101,18 @@ class LikeController extends Controller
     /**
      * Create a Like associated to a user on a likeable model.
      *
-     * @param User $user
-     * @param Model $model
      * @throws InvalidArgumentException
-     * @return Like
      */
     private function like(User $user, Model $model): Like
     {
-        if($model->likes()->where('owner_id', $user->id)->exists()){
+        if ($model->likes()->where('owner_id', $user->id)->exists()) {
             $class = strtolower(class_basename($model));
             throw new InvalidArgumentException(
                 message: "This user already likes this $class"
             );
         }
 
-        /**@var Like $like**/
+        /** @var Like $like* */
         $like = $model->likes()->make();
 
         $like->owner()->associate($user);
@@ -127,14 +125,11 @@ class LikeController extends Controller
     /**
      * Deletes a Like associated to a user on a likeable model.
      *
-     * @param User $user
-     * @param Model $model
      * @throws InvalidArgumentException
-     * @return void
      */
     private function dislike(User $user, Model $model): void
     {
-        /**@var Like $like **/
+        /** @var Like $like * */
         $like = $model->likes()->where('owner_id', '=', $user->id)->get()->first();
 
         if ($user->cannot('delete', $like)) {

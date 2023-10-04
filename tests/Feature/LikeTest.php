@@ -59,8 +59,8 @@ test('get post likes', function ($post) {
                 '*' => [
                     'id',
                     'owner',
-                ]
-            ]
+                ],
+            ],
         ]);
 
 })->depends('like post');
@@ -76,8 +76,8 @@ test('get comment likes', function ($comment) {
                 '*' => [
                     'id',
                     'owner',
-                ]
-            ]
+                ],
+            ],
         ]);
 
 })->depends('like comment');
@@ -88,7 +88,7 @@ test('dislike post', function ($post) {
     $response
         ->assertStatus(200)
         ->assertExactJson([
-            'message' => 'Post disliked'
+            'message' => 'Post disliked',
         ]);
 
     return $post;
@@ -100,7 +100,7 @@ test('dislike a post that is not liked', function ($post) {
     $response
         ->assertStatus(400)
         ->assertExactJson([
-            'message' => 'Post is not liked'
+            'message' => 'Post is not liked',
         ]);
 })->depends('dislike post');
 
@@ -110,7 +110,7 @@ test('dislike comment', function ($comment) {
     $response
         ->assertStatus(200)
         ->assertExactJson([
-            'message' => 'Comment disliked'
+            'message' => 'Comment disliked',
         ]);
 
     return $comment;
@@ -122,6 +122,6 @@ test('dislike a comment that is not liked', function ($comment) {
     $response
         ->assertStatus(400)
         ->assertExactJson([
-            'message' => 'Post is not liked'
+            'message' => 'Post is not liked',
         ]);
 })->depends('dislike post');
