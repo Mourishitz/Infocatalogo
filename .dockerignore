@@ -1,0 +1,6 @@
+tests
+.editorconfig
+phpunit.xml
+README.md
+.idea
+docs

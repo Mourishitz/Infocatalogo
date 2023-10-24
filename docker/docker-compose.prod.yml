@@ -1,15 +1,24 @@
 version: "3.3"
 
 services:
+  app:
+    container_name: infocatalogo_app
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - db
+    networks:
+      - infonetwork
 
   db:
     container_name: infocatalogo_db
     image: postgres:15-alpine
     restart: always
-    ports:
-      - "5432:5432"
     env_file:
-      - ./env/db.env
+      - ./pgsql/db.prod.env
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:

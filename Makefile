@@ -1,5 +1,8 @@
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
+up-dev:
+    docker-compose up -f="./docker/docker-compose.yml" up -d
+
 pint:
 	./vendor/bin/pint
 
