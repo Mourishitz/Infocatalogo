@@ -1,68 +1,20 @@
-FROM php:8.1-fpm
+FROM richarvey/nginx-php-fpm:1.9.1
 
-ENV DEBIAN_FRONTEND noninteractive
+COPY . .
 
-ARG PHP_VERSION=8.1
+# Image config
+ENV SKIP_COMPOSER 1
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
+ENV REAL_IP_HEADER 1
 
-# Updating OS
-RUN apt-get update \
-    && apt-get install -y \
-        zlib1g-dev \
-        libicu-dev \
-        libgif-dev \
-        libjpeg-dev \
-        libcairo2-dev \
-        libpango1.0-dev \
-        libpng-dev \
-        libpq-dev \
-        libmcrypt-dev \
-        libpng-dev \
-        libzip-dev \
-        zip \
-        build-essential \
-        g++ \
-        libxml2-dev \
-        vim \
-        awscli \
-        supervisor \
-	    tzdata \
-	    libjpeg62-turbo-dev \
-	    cron \
-        make \
-    && pecl upgrade timezonedb.tgz \
-    && pecl install swoole \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-enable timezonedb \
-    && docker-php-ext-enable swoole \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-configure soap --enable-soap \
-    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install pcntl intl zip gd opcache pdo_pgsql soap \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Laravel config
+ENV APP_ENV production
+ENV APP_DEBUG false
+ENV LOG_CHANNEL stderr
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && chmod +x /usr/local/bin/composer
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
-RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
-
-ADD . /var/www/app
-
-WORKDIR /var/www/app
-
-RUN chown -R www-data:www-data /var/www/app
-
-RUN mkdir /run/php
-
-COPY docker/php/custom_php.ini /usr/local/etc/php/conf.d
-
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-RUN sed -i "s/#PHP_VERSION#/${PHP_VERSION}/g" /etc/supervisor/conf.d/supervisord.conf
-
-RUN chown -R www-data:www-data /var/log/supervisor/
-
-EXPOSE 80
-
-CMD ["/bin/bash", "./docker/entrypoint.sh"]
+CMD ["/start.sh"]
